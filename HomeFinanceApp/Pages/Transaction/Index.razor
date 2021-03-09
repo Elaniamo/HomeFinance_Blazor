@@ -1,0 +1,91 @@
+﻿@page "/"
+@inherits HomePage
+@if (Turnover == null || Turnover.Transactions == null)
+{
+<p><em>Loading...</em></p> }
+else
+{
+<h1>
+    Home finance @Balance.Total.ToString("N2")</h1> <!-- This is the popup to create or edit a forecast -->
+<div class="form-row">
+    <div class="col-md-2 col-5">
+        <span>From:</span>
+        <input type="date" value="@StartDate.ToString("yyyy-MM-dd")" @onchange="@FilterStartDateChangedAsync" />
+    </div>
+    <div class="col-md-2 col-5">
+        <span>to:</span>
+        <input type="date" value="@EndDate.ToString("yyyy-MM-dd")" @onchange="@FilterEndDateChangedAsync" />
+    </div>
+</div>
+
+<div>
+    <br />
+    <button class="btn-sm btn-success" @onclick="@(() => AddNewTransaction())">
+        <span class="oi oi-plus" aria-hidden="true"></span>
+    </button> @Time
+
+</div>
+                                                
+<div class="table-responsive-sm">
+ <table class="table table-sm table-striped table-hover">
+     <thead class="thead-dark">
+         <tr>
+             <th></th>
+             <th>Date</th>
+             <th>Category</th>
+             <th class="text-right">Amount</th>
+             <th class="text-center">Type</th>
+             <th>Note</th>
+             <th></th>
+         </tr>
+     </thead>
+     <tbody>
+         @foreach (var item in @Turnover.Transactions)
+         {
+         <tr>
+             <th></th>
+             <td>@item.Date.ToString("dd/MM/yyyy")</td>
+             <td>@item.Category</td>
+             <td class="text-right">@item.Amount.ToString("N2")</td>
+             <td class="text-center">
+                 @{ var iconToUse = "";
+                     var classToUse = "";
+
+                     if (item.Amount > 0)
+                     {
+                         iconToUse = "arrow-thick-top";
+                         classToUse = "text-success";
+                     }
+                     else if (item.Amount < 0)
+                     {
+                         iconToUse = "arrow-thick-bottom";
+                         classToUse = "text-danger";
+                     }
+                     else
+                     {
+                         iconToUse = "ellipses";
+                         classToUse = "text-none";
+                     } }
+                 <span class="oi oi-@iconToUse @classToUse" aria-hidden="true" title="Fixed"></span>
+             </td>
+             <td class="text-left">@item.Description</td>
+         </tr>
+}
+        </tbody>
+    </table>
+</div>
+ <tfoot>
+     <tr>
+         <th scope="row">Income for the period: </th>
+         <td class="text-right"><b>@Turnover.Transactions.Where(s => s.Amount > 0).Sum(x => x.Amount).ToString("N2")</b></td>
+     </tr>
+     <tr>
+         <th scope="row"> Consumption for the period : </th>
+         <td class="text-right"><b>@Turnover.Transactions.Where(s => s.Amount < 0).Sum(x => x.Amount).ToString("N2")</b></td>
+     </tr>
+     <tr>
+
+         <th scope="row">Current balance: </th>
+         <td class="text-right"><b>@Balance.Total.ToString("N2")</b></td>
+     </tr>
+ </tfoot>}

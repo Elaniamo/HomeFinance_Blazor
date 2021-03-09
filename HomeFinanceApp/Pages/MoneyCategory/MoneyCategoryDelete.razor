@@ -1,0 +1,29 @@
+﻿@page "/MoneyCategoryDelete/{Id}"
+@inherits MoneyCategoryDeletePage
+
+<h3>@Title</h3>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <label for="Name" class="control-label">Name</label>
+            <input form="Name" class="form-control" @bind="@mc.Description" />
+        </div>
+        <div class="form-group">
+            <label for="Type" class="control-label">Type</label>
+            <select @bind="@mc.TypeId" class="form-control">
+                <option value="">----Select Type---</option>
+                <option value="1">Expence</option>
+                <option value="2">Income </option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-danger" disabled="@IsDisabled" @onclick="@DeleteMoneyCategory" value="Delete" />
+            <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+        </div>
+    </div>
+</div>
